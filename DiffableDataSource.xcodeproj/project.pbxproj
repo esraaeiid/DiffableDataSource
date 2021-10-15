@@ -14,6 +14,8 @@
 		10B4198B271A2E3900D0C518 /* DiffableDataSource.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 10B41989271A2E3900D0C518 /* DiffableDataSource.xcdatamodeld */; };
 		10B4198D271A2E3C00D0C518 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 10B4198C271A2E3C00D0C518 /* Assets.xcassets */; };
 		10B41990271A2E3C00D0C518 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 10B4198E271A2E3C00D0C518 /* LaunchScreen.storyboard */; };
+		10B41998271A3E6E00D0C518 /* APICaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B41997271A3E6E00D0C518 /* APICaller.swift */; };
+		10B4199A271A3F3500D0C518 /* NewsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B41999271A3F3500D0C518 /* NewsCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +28,8 @@
 		10B4198C271A2E3C00D0C518 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		10B4198F271A2E3C00D0C518 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		10B41991271A2E3C00D0C518 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		10B41997271A3E6E00D0C518 /* APICaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICaller.swift; sourceTree = "<group>"; };
+		10B41999271A3F3500D0C518 /* NewsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +65,8 @@
 				10B41980271A2E3900D0C518 /* AppDelegate.swift */,
 				10B41982271A2E3900D0C518 /* SceneDelegate.swift */,
 				10B41984271A2E3900D0C518 /* ViewController.swift */,
+				10B41999271A3F3500D0C518 /* NewsCollectionViewCell.swift */,
+				10B41997271A3E6E00D0C518 /* APICaller.swift */,
 				10B41986271A2E3900D0C518 /* Main.storyboard */,
 				10B4198C271A2E3C00D0C518 /* Assets.xcassets */,
 				10B4198E271A2E3C00D0C518 /* LaunchScreen.storyboard */,
@@ -141,8 +147,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				10B41985271A2E3900D0C518 /* ViewController.swift in Sources */,
+				10B4199A271A3F3500D0C518 /* NewsCollectionViewCell.swift in Sources */,
 				10B41981271A2E3900D0C518 /* AppDelegate.swift in Sources */,
 				10B41983271A2E3900D0C518 /* SceneDelegate.swift in Sources */,
+				10B41998271A3E6E00D0C518 /* APICaller.swift in Sources */,
 				10B4198B271A2E3900D0C518 /* DiffableDataSource.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
