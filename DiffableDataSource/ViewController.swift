@@ -21,6 +21,14 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     private var viewModels = [NewsCollectionViewCellViewModel]()
     private var articles = [Article]()
     
+    enum Section {
+      case main
+    }
+
+    typealias DataSource = UICollectionViewDiffableDataSource<Section, Article>
+
+    
+    private var searchController = UISearchController(searchResultsController: nil)
 
     
     
@@ -41,7 +49,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
 
         setupCollectionView()
         getStories()
-      
+      configureSearchController()
     }
     
     override func viewDidLayoutSubviews() {
@@ -78,6 +86,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         }
     }
     
+ 
+    
     
     //MARK:- CollectionView Delegate and DataSource Methods
     
@@ -110,8 +120,33 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         return CGSize(width: view.frame.width, height: 150)
     }
     
-
-
-
 }
 
+// MARK: - UISearchResultsUpdating Delegate
+extension ViewController: UISearchResultsUpdating {
+  func updateSearchResults(for searchController: UISearchController) {
+    articles = filteredArticles(for: searchController.searchBar.text)
+    collectionView.reloadData()
+  }
+  
+  func filteredArticles(for queryOrNil: String?) -> [Article] {
+    let articles = articles
+    guard
+      let query = queryOrNil,
+      !query.isEmpty
+      else {
+        return articles
+    }
+    return articles.filter {
+      return $0.title.lowercased().contains(query.lowercased())
+    }
+  }
+  
+  func configureSearchController() {
+    searchController.searchResultsUpdater = self
+    searchController.obscuresBackgroundDuringPresentation = false
+    searchController.searchBar.placeholder = "Search Articles"
+    navigationItem.searchController = searchController
+    definesPresentationContext = true
+  }
+}

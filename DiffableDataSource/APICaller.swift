@@ -47,13 +47,26 @@ struct APIResponse: Codable {
     let articles: [Article]
 }
 
-struct Article: Codable {
+struct Article: Codable, Hashable {
+    var id : UUID? = UUID()
     let source: Source
     let title : String
     let description : String?
     let url: String?
     let urlToImage: String?
     let publishedAt: String
+    
+    // 1
+    func hash(into hasher: inout Hasher) {
+      // 2
+      hasher.combine(id)
+    }
+
+    // 3
+    static func == (lhs: Article, rhs: Article) -> Bool {
+      lhs.id == rhs.id
+    }
+
 }
 struct Source: Codable {
     let name: String
