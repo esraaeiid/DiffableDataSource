@@ -48,13 +48,17 @@ struct APIResponse: Codable {
 }
 
 struct Article: Codable, Hashable {
-    var id : UUID? = UUID()
+    let id  = UUID()
     let source: Source
     let title : String
     let description : String?
     let url: String?
     let urlToImage: String?
     let publishedAt: String
+    
+    private enum CodingKeys : String, CodingKey { case source, title, description,
+                                                       url, urlToImage, publishedAt
+                                                       }
     
     // 1
     func hash(into hasher: inout Hasher) {

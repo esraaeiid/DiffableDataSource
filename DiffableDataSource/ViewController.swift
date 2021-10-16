@@ -8,11 +8,10 @@
 import UIKit
 import SafariServices
 
-//. Understanding how can Diffable Datasources apply the animation when changing data ( for example when searching)
-//. Understanding how does Hashable affect the behaviour of Diffable Datasources
+
 //. Understanding how does Generics are used to simplify the API design
 
-class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     //Instance Properties
     
@@ -20,12 +19,15 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     private var viewModels = [NewsCollectionViewCellViewModel]()
     private var articles = [Article]()
+    private lazy var dataSource = makeDataSource()
+
     
     enum Section {
       case main
     }
 
     typealias DataSource = UICollectionViewDiffableDataSource<Section, Article>
+    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Article>
 
     
     private var searchController = UISearchController(searchResultsController: nil)
@@ -49,7 +51,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
 
         setupCollectionView()
         getStories()
-      configureSearchController()
+        configureSearchController()
+        applySnapshot(animatingDifferences: false)
     }
     
     override func viewDidLayoutSubviews() {
@@ -57,8 +60,39 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         collectionView.frame = view.bounds
     }
     
+    func makeDataSource() -> DataSource {
+      // 1
+      let dataSource = DataSource(
+        collectionView: collectionView,
+        cellProvider: { (collectionView, indexPath, article) ->
+          UICollectionViewCell? in
+          // 2
+          let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: NewsCollectionViewCell.identifier,
+            for: indexPath) as? NewsCollectionViewCell
+            cell?.configure(with: .init(title: article.title,
+                                        subtitle: article.description ??  "NO Description",
+                                        imageURL: URL(string: article.urlToImage ?? "")))
+          return cell
+      })
+      return dataSource
+    }
+    
+    // 1
+    func applySnapshot(animatingDifferences: Bool = true) {
+      // 2
+      var snapshot = Snapshot()
+      // 3
+      snapshot.appendSections([.main])
+      // 4
+      snapshot.appendItems(articles)
+      // 5
+      dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
+    }
+
+
+    
     func setupCollectionView(){
-        collectionView.dataSource = self
         collectionView.delegate = self
         
         
@@ -78,7 +112,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
                                                imageURL: URL(string: $0.urlToImage ?? ""))
                 })
                 DispatchQueue.main.async {
-                    self?.collectionView.reloadData()
+                    self?.applySnapshot()
+
                 }
             case .failure(let error):
                 print(error)
@@ -90,25 +125,14 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     
     //MARK:- CollectionView Delegate and DataSource Methods
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModels.count
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NewsCollectionViewCell.identifier, for: indexPath) as? NewsCollectionViewCell else {
-            assertionFailure("Can't load collectionViewCell!")
-            return UICollectionViewCell()
-        }
-        cell.configure(with: viewModels[indexPath.row])
-        return cell
-    }
-
-    
-    
+        
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
-        let article = articles[indexPath.row]
+        
+        guard let article = dataSource.itemIdentifier(for: indexPath) else {
+          return
+        }
+
         
         guard let url = URL(string: article.url ?? "" ) else { return }
         
@@ -126,7 +150,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
 extension ViewController: UISearchResultsUpdating {
   func updateSearchResults(for searchController: UISearchController) {
     articles = filteredArticles(for: searchController.searchBar.text)
-    collectionView.reloadData()
+    applySnapshot()
   }
   
   func filteredArticles(for queryOrNil: String?) -> [Article] {
