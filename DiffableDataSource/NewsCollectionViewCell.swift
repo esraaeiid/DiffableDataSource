@@ -10,13 +10,12 @@ import UIKit
 class NewsCollectionViewCellViewModel {
     let title: String
     let subtitle: String
-    let imageURL: URL?
-    var imageData: Data? = nil
+    var image: UIImage?
     
-    init(title: String, subtitle: String, imageURL: URL?) {
+    init(title: String, subtitle: String, image: UIImage?) {
         self.title = title
         self.subtitle = subtitle
-        self.imageURL = imageURL
+        self.image = image
     }
 }
 
@@ -76,31 +75,16 @@ class NewsCollectionViewCell: UICollectionViewCell {
                                       height: contentView.frame.size.height - 10)
     }
     
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        newsImageView.image = nil
-        newsTitleLabel.text = nil
-        subtitleTitleLabel.text = nil
-    }
+   
+
     
     func configure(with viewModel: NewsCollectionViewCellViewModel){
         newsTitleLabel.text = viewModel.title
         subtitleTitleLabel.text = viewModel.subtitle
-        if let data = viewModel.imageData {
-        newsImageView.image = UIImage(data: data)
+        if let image = viewModel.image {
+        newsImageView.image = image
         }
-        else  if let url = viewModel.imageURL{
-            //fetch image
-            URLSession.shared.dataTask(with: url) { [weak self](data, _, error) in
-                guard let data = data, error == nil else{
-                    return
-                }
-                viewModel.imageData = data
-                DispatchQueue.main.async {
-                    self?.newsImageView.image = UIImage(data: data)
-                }
-            }.resume()
-        }
+   
     }
 }
 

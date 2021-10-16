@@ -16,6 +16,8 @@
 		10B41990271A2E3C00D0C518 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 10B4198E271A2E3C00D0C518 /* LaunchScreen.storyboard */; };
 		10B41998271A3E6E00D0C518 /* APICaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B41997271A3E6E00D0C518 /* APICaller.swift */; };
 		10B4199A271A3F3500D0C518 /* NewsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B41999271A3F3500D0C518 /* NewsCollectionViewCell.swift */; };
+		10B4199C271A6D2E00D0C518 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B4199B271A6D2E00D0C518 /* Section.swift */; };
+		10B4199E271A7BF200D0C518 /* SectionHeaderReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B4199D271A7BF100D0C518 /* SectionHeaderReusableView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,8 @@
 		10B41991271A2E3C00D0C518 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		10B41997271A3E6E00D0C518 /* APICaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICaller.swift; sourceTree = "<group>"; };
 		10B41999271A3F3500D0C518 /* NewsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCollectionViewCell.swift; sourceTree = "<group>"; };
+		10B4199B271A6D2E00D0C518 /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
+		10B4199D271A7BF100D0C518 /* SectionHeaderReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderReusableView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,8 +69,10 @@
 				10B41980271A2E3900D0C518 /* AppDelegate.swift */,
 				10B41982271A2E3900D0C518 /* SceneDelegate.swift */,
 				10B41984271A2E3900D0C518 /* ViewController.swift */,
+				10B4199B271A6D2E00D0C518 /* Section.swift */,
 				10B41999271A3F3500D0C518 /* NewsCollectionViewCell.swift */,
 				10B41997271A3E6E00D0C518 /* APICaller.swift */,
+				10B4199D271A7BF100D0C518 /* SectionHeaderReusableView.swift */,
 				10B41986271A2E3900D0C518 /* Main.storyboard */,
 				10B4198C271A2E3C00D0C518 /* Assets.xcassets */,
 				10B4198E271A2E3C00D0C518 /* LaunchScreen.storyboard */,
@@ -149,8 +155,10 @@
 				10B41985271A2E3900D0C518 /* ViewController.swift in Sources */,
 				10B4199A271A3F3500D0C518 /* NewsCollectionViewCell.swift in Sources */,
 				10B41981271A2E3900D0C518 /* AppDelegate.swift in Sources */,
+				10B4199C271A6D2E00D0C518 /* Section.swift in Sources */,
 				10B41983271A2E3900D0C518 /* SceneDelegate.swift in Sources */,
 				10B41998271A3E6E00D0C518 /* APICaller.swift in Sources */,
+				10B4199E271A7BF200D0C518 /* SectionHeaderReusableView.swift in Sources */,
 				10B4198B271A2E3900D0C518 /* DiffableDataSource.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -17,17 +17,13 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     let apiKey = "4435399e0203452ba983391f629f3ed6"
     
-    private var viewModels = [NewsCollectionViewCellViewModel]()
-    private var articles = [Article]()
+    
+    private var sections = Section.allSections
     private lazy var dataSource = makeDataSource()
 
-    
-    enum Section {
-      case main
-    }
 
-    typealias DataSource = UICollectionViewDiffableDataSource<Section, Article>
-    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Article>
+    typealias DataSource = UICollectionViewDiffableDataSource<Section, Video>
+    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Video>
 
     
     private var searchController = UISearchController(searchResultsController: nil)
@@ -50,7 +46,6 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         title = "News"
 
         setupCollectionView()
-        getStories()
         configureSearchController()
         applySnapshot(animatingDifferences: false)
     }
@@ -71,8 +66,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             withReuseIdentifier: NewsCollectionViewCell.identifier,
             for: indexPath) as? NewsCollectionViewCell
             cell?.configure(with: .init(title: article.title,
-                                        subtitle: article.description ??  "NO Description",
-                                        imageURL: URL(string: article.urlToImage ?? "")))
+                                        subtitle: "\(article.lessonCount)",
+                                        image: article.thumbnail ?? nil))
           return cell
       })
       return dataSource
@@ -82,10 +77,12 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     func applySnapshot(animatingDifferences: Bool = true) {
       // 2
       var snapshot = Snapshot()
-      // 3
-      snapshot.appendSections([.main])
-      // 4
-      snapshot.appendItems(articles)
+        // 3
+        snapshot.appendSections(sections)
+        sections.forEach { section in
+          snapshot.appendItems(section.videos, toSection: section)
+        }
+
       // 5
       dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
     }
@@ -101,25 +98,6 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         view.addSubview(collectionView)
     }
     
-    func getStories(){
-        APICaller.shared.getTopStories { [weak self] result in
-            switch result {
-            case .success(let articles):
-                self?.articles = articles
-                self?.viewModels = articles.compactMap({
-                    NewsCollectionViewCellViewModel(title: $0.title,
-                                               subtitle: $0.description ?? "NO Description",
-                                               imageURL: URL(string: $0.urlToImage ?? ""))
-                })
-                DispatchQueue.main.async {
-                    self?.applySnapshot()
-
-                }
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
     
  
     
@@ -128,15 +106,17 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
+   
         
-        guard let article = dataSource.itemIdentifier(for: indexPath) else {
+        guard let video = dataSource.itemIdentifier(for: indexPath) else {
+          return
+        }
+        guard let link = video.link else {
+          print("Invalid link")
           return
         }
 
-        
-        guard let url = URL(string: article.url ?? "" ) else { return }
-        
-        let vc = SFSafariViewController(url: url)
+        let vc = SFSafariViewController(url: link)
         present(vc, animated: true)
     }
     
@@ -149,22 +129,32 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
 // MARK: - UISearchResultsUpdating Delegate
 extension ViewController: UISearchResultsUpdating {
   func updateSearchResults(for searchController: UISearchController) {
-    articles = filteredArticles(for: searchController.searchBar.text)
+    sections = filteredSections(for: searchController.searchBar.text)
     applySnapshot()
   }
   
-  func filteredArticles(for queryOrNil: String?) -> [Article] {
-    let articles = articles
-    guard
-      let query = queryOrNil,
-      !query.isEmpty
-      else {
-        return articles
+    func filteredSections(for queryOrNil: String?) -> [Section] {
+      let sections = Section.allSections
+
+      guard
+        let query = queryOrNil,
+        !query.isEmpty
+        else {
+          return sections
+      }
+        
+      return sections.filter { section in
+        var matches = section.title.lowercased().contains(query.lowercased())
+        for video in section.videos {
+          if video.title.lowercased().contains(query.lowercased()) {
+            matches = true
+            break
+          }
+        }
+        return matches
+      }
     }
-    return articles.filter {
-      return $0.title.lowercased().contains(query.lowercased())
-    }
-  }
+
   
   func configureSearchController() {
     searchController.searchResultsUpdater = self
